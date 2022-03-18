@@ -3,6 +3,7 @@ import json
 from flask import Flask, request, render_template, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 import urllib.request
+from size_prediction import get_size_by_photos, save_segmented_images, product_size_recommender
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.config['RESOURCES_FOLDER'] = RESOURCES_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 image_save_paths = {}
+customer_info = {}
 test_image = RESOURCES_FOLDER + '1449980.png'
 segmented_images = {
     'front': SEGMENTED_IMAGES_FOLDER + 'front_segmented.jpg',
@@ -51,14 +53,13 @@ def save_customer_image(image_profile):
     else:
         flash('Allowed image types are - png, jpg, jpeg, gif')
         return redirect(request.url)
+    return save_path
 
 def save_customer_information():
-    customer_info = {
-        'height': request.form['height'],
-        'front': image_save_paths['front'],
-        'side': image_save_paths['side']
-    }
-    save_path = os.path.join(app.config['UPLOAD_FOLDER'] + 'customer_info/customer_info.json')
+    customer_info['height'] = request.form['height'],
+    customer_info['front'] = image_save_paths['front'],
+    customer_info['side'] = image_save_paths['side']
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'] + 'customer_info.json')
     with open(save_path, "w") as outfile:
         json.dump(customer_info, outfile)
 
@@ -74,7 +75,11 @@ def check_paths():
         os.makedirs(info_path)
 
 def calculate_size():
-    flash('Hello beautiful, we think this product in a size XXS/XS would look amazing on you!')
+    front_segmented, side_segmented, waist_in_cm = get_size_by_photos(image_save_paths['front'], image_save_paths['side'], customer_info['height'])
+    save_segmented_images(front_segmented, side_segmented)
+    size = product_size_recommender(waist_in_cm)
+    # flash(f'Detected waist size: {waist_in_cm:.2f}cm')
+    flash(f'Hello beautiful, we think this product in a size {size} would look amazing on you!')
 
 
 # Website functions
