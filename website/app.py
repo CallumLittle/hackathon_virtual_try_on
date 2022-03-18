@@ -8,15 +8,20 @@ app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
 RESOURCES_FOLDER = 'static/resources/'
+SEGMENTED_IMAGES_FOLDER = 'static/image_files/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gifs'])
 
-app.secret_key = "secret key"
+app.secret_key = os.urandom(12) #"secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESOURCES_FOLDER'] = RESOURCES_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 image_save_paths = {}
 test_image = RESOURCES_FOLDER + '1449980.png'
+segmented_images = {
+    'front': SEGMENTED_IMAGES_FOLDER + 'front_segmented.jpg',
+    'side': SEGMENTED_IMAGES_FOLDER + 'side_segmented.jpg'
+}
 
 # Helper funtions
 def allowed_file(filename):
@@ -84,7 +89,11 @@ def upload_image():
     save_customer_image('side')
     save_customer_information()
     calculate_size()
-    return render_template('size_results.html', product_image=test_image)
+    
+    return render_template('size_results.html', 
+        product_image=test_image,
+        front_segmented = segmented_images['front'],
+        side_segmented = segmented_images['side'])
 
 @app.route('/customer_info', methods=['POST'])
 def get_product_info():

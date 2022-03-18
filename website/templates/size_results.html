@@ -9,8 +9,8 @@
 </head>
 
 <body>
+  <center><img src="static/resources/matchesfashion-logo.png" alt="MF Logo" width=500px height="auto"></center>
   <div class="container">
-    <img src="static/resources/matchesfashion-logo.png" alt="MF Logo" width=500px height="auto" align="center" >
     <div>
       <img src="{{ product_image }}" alt="Product Image" width=330px height=auto align="left">
       <p style="float:right" ;>
@@ -35,17 +35,7 @@
         <p></p>
         <input type="submit" value="Find your perfect size!" />
       </form>
-      <!-- <div>
-        <h2>Segmented Images</h2>
-        <img src="static/test_images/front.jpg" alt="Front" width=330px height=auto align="left">
-        <img src="static/test_images/side.jpg" alt="Side" width=330px height=auto align="left">
-      </div>
-      <div> -->
-      </div>
-      <h2>Segmented Images</h2>
-      <img src="static/test_images/front_segmented.jpg"alt="Front Segmented" width=330px height=auto align="left">
-      <img src="static/test_images/side_segmented.jpg" alt="Side Segmented" width=330px height=auto align="left">
-    </div>
+
       <p align="'center">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -57,7 +47,14 @@
       {% endif %}
       {% endwith %}
       </p>
+
     </div>
+    <h2>Segmented Images</h2>
+    <img src="{{ front_segmented }}" alt="Front Segmented" width=250px height=auto align="left">
+    <img src="{{ side_segmented }}" alt="Side Segmented" width=250x height=auto align="center">
+  </div>
+  <p></p>
+  </div>
   </div>
 </body>
 
