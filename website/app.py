@@ -17,6 +17,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['RESOURCES_FOLDER'] = RESOURCES_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
+save_images = False
 image_save_paths = {}
 customer_info = {}
 test_image = RESOURCES_FOLDER + '1449980.png'
@@ -47,15 +48,16 @@ def save_customer_image(image_profile):
         file_extension = get_extension(image.filename)
         filename = secure_filename(image.filename)
         save_path = os.path.join(app.config['UPLOAD_FOLDER'] + f'images/{image_profile}.{file_extension}')
-        image.save(save_path)
         image_save_paths[image_profile] = save_path
-        print('upload_image filename: ' + filename)
+        if save_images:
+            image.save(save_path)
+            print('Saving ' + filename)
     else:
         flash('Allowed image types are - png, jpg, jpeg, gif')
         return redirect(request.url)
     return save_path
 
-def save_customer_information():
+def save_size_information():
     customer_info['height'] = request.form['height'],
     customer_info['front'] = image_save_paths['front'],
     customer_info['side'] = image_save_paths['side']
@@ -76,9 +78,10 @@ def check_paths():
 
 def calculate_size():
     front_segmented, side_segmented, waist_in_cm = get_size_by_photos(image_save_paths['front'], image_save_paths['side'], customer_info['height'])
-    save_segmented_images(front_segmented, side_segmented)
+    if save_images:
+        save_segmented_images(front_segmented, side_segmented)
     size = product_size_recommender(waist_in_cm)
-    # flash(f'Detected waist size: {waist_in_cm:.2f}cm')
+    print(f'Detected waist size: {waist_in_cm:.2f}cm')
     flash(f'Hello beautiful, we think this product in a size {size} would look amazing on you!')
 
 
@@ -92,32 +95,21 @@ def upload_image():
     check_paths()
     save_customer_image('front')
     save_customer_image('side')
-    save_customer_information()
+    save_size_information()
     calculate_size()
     
-    return render_template('size_results.html', 
+    return render_template('customer_info.html', 
         product_image=test_image,
         front_segmented = segmented_images['front'],
         side_segmented = segmented_images['side'])
 
 @app.route('/customer_info', methods=['POST'])
 def get_product_info():
-    print(test_image)
     return render_template('customer_info.html', product_image=test_image)
 
 @app.route('/display/<filename>')
 def display_image(filename):
     return redirect(url_for('static', filename=test_image), code=301)
-
-if __name__ == "__main__":
-    app.run()
-
-    
-
-# @app.route('/display/<filename>')
-# def display_image(filename):
-#     #print('display_image filename: ' + filename)
-#     return redirect(url_for('static', filename='uploads/' + filename), code=301)
 
 if __name__ == "__main__":
     app.run()
