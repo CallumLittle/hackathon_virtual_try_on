@@ -7,8 +7,8 @@ import urllib.request
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
-RESOURCES_FOLDER = 'resources/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+RESOURCES_FOLDER = 'static/resources/'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gifs'])
 
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -16,6 +16,7 @@ app.config['RESOURCES_FOLDER'] = RESOURCES_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 image_save_paths = {}
+test_image = RESOURCES_FOLDER + '1449980.png'
 
 # Helper funtions
 def allowed_file(filename):
@@ -67,12 +68,16 @@ def check_paths():
         print('Creating', info_path)
         os.makedirs(info_path)
 
+def calculate_size():
+    flash('Hello beautiful, we think this product in a size XXS/XS would look amazing on you!')
+
+
 # Website functions
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/', methods=['POST'])
+@app.route('/customer_size', methods=['POST'])
 def upload_image():
     check_paths()
 
@@ -85,13 +90,18 @@ def upload_image():
     save_customer_information()
     # flash('Customer information successfully saved')
 
-    return render_template('index.html')
+    calculate_size()
+    return render_template('customer_info.html', product_image=test_image)
 
-# @app.route('/', methods=['POST'])
-# def get_product_info():
-#     flash('PRODUCT INFO HERE')
-#     return render_template('index.html')
+@app.route('/customer_info', methods=['POST'])
+def get_product_info():
+    print(test_image)
+    return render_template('customer_info.html', product_image=test_image)
 
+@app.route('/display/<filename>')
+def display_image(filename):
+    #print('display_image filename: ' + filename)
+    return redirect(url_for('static', filename=test_image), code=301)
 
 if __name__ == "__main__":
     app.run()

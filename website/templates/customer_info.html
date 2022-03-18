@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual Try-on</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <p>
+    <h1 align="center">MF Hackathon: Virtual Try-on Project</h1>
+    </p>
+    <div>
+      <img src="{{ product_image }}" alt="Product Image" width=330px height=auto align="left">
+      <p style="float:right" ;>
+      <h2>Product Information</h2>
+      <h3>GANNI</h3>
+      <h4>V-neck logo-embroidered wool-blend sweater - Pink</h4>
+      </p>
+    </div>
+    <div>
+      <p>
+      <h2>Customer Size Information</h2>
+      </p>
+      <form action="customer_size" enctype="multipart/form-data" method="POST">
+        <p>Customer Height (cm)</p>
+        <input type="text" name="height" , id="height" required />
+        <p></p>
+        <p>Front Image</p>
+        <input type="file" name="front" required />
+        <p></p>
+        <p>Side Image</p>
+        <input type="file" name="side" required /> &nbsp
+        <p></p>
+        <input type="submit" value="Process" />
+      </form>
+      <p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>
