@@ -14,12 +14,9 @@
   <h1 align="center">MF Hackathon: Virtual Try-on Project</h1>
   </p>
   <p>
-  <h2>Customer Information</h2>
+  <h2>Customer Size Information</h2>
   </p>
   <form action="/" enctype="multipart/form-data" method="POST">
-    <p>Customer Name</p>
-    <input type="text" name="name" , id="name" required />
-    <p></p>
     <p>Customer Height (cm)</p>
     <input type="text" name="height" , id="height" required />
     <p></p>
@@ -31,6 +28,15 @@
     <p></p>
     <input type="submit" value="Submit" />
   </form>
+  <!-- <p>
+    <h2>Product Information</h2>
+    </p>
+  <form action="/" enctype="multipart/form-data" method="POST">
+    <p>Product URL</p>
+    <input type="text" name="product_url" , id="product_url" required /> &nbsp
+    <input type="submit" value="Submit" />
+    <p></p>
+  </form> -->
   <p>
     {% with messages = get_flashed_messages() %}
     {% if messages %}

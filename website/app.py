@@ -7,18 +7,24 @@ import urllib.request
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'static/uploads/'
+RESOURCES_FOLDER = 'resources/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['RESOURCES_FOLDER'] = RESOURCES_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
 image_save_paths = {}
 
 # Helper funtions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def save_customer_images(image_profile):
+def get_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()
+
+def save_customer_image(image_profile):
     if image_profile not in request.files:
         flash('No file part')
         return redirect(request.url)
@@ -30,8 +36,9 @@ def save_customer_images(image_profile):
         return redirect(request.url)
 
     if image and allowed_file(image.filename):
+        file_extension = get_extension(image.filename)
         filename = secure_filename(image.filename)
-        save_path = os.path.join(app.config['UPLOAD_FOLDER'] + f'images/{image_profile}/', filename)
+        save_path = os.path.join(app.config['UPLOAD_FOLDER'] + f'images/{image_profile}.{file_extension}')
         image.save(save_path)
         image_save_paths[image_profile] = save_path
         print('upload_image filename: ' + filename)
@@ -41,22 +48,19 @@ def save_customer_images(image_profile):
 
 def save_customer_information():
     customer_info = {
-        'name': request.form['name'], 
         'height': request.form['height'],
         'front': image_save_paths['front'],
         'side': image_save_paths['side']
     }
-    str_name = customer_info['name'].replace(' ', '_')
-    save_path = os.path.join(app.config['UPLOAD_FOLDER'] + 'customer_info/', f'{str_name}.json')
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'] + 'customer_info/customer_info.json')
     with open(save_path, "w") as outfile:
         json.dump(customer_info, outfile)
 
 def check_paths():
-    for image_profile in ['front', 'side']:
-        profile_path = os.path.join(app.config['UPLOAD_FOLDER'], f'images/{image_profile}/')
-        if not os.path.exists(profile_path):
-            print('Creating', profile_path)
-            os.makedirs(profile_path)
+    images_path = os.path.join(app.config['UPLOAD_FOLDER'], f'images/')
+    if not os.path.exists(images_path):
+        print('Creating', images_path)
+        os.makedirs(images_path)
 
     info_path = os.path.join(app.config['UPLOAD_FOLDER'], 'customer_info/')
     if not os.path.exists(info_path):
@@ -70,16 +74,28 @@ def home():
 
 @app.route('/', methods=['POST'])
 def upload_image():
-    print(1)
     check_paths()
-    for profile in ['front', 'side']:
-        save_customer_images(profile)
-    flash('Images successfully saved')
 
-    print(image_save_paths)
+    # Save Image Locally
+    save_customer_image('front')
+    save_customer_image('side')
+    # flash('Images successfully saved')
+
+    # Save information
     save_customer_information()
-    flash('Customer information successfully saved')
+    # flash('Customer information successfully saved')
+
     return render_template('index.html')
+
+# @app.route('/', methods=['POST'])
+# def get_product_info():
+#     flash('PRODUCT INFO HERE')
+#     return render_template('index.html')
+
+
+if __name__ == "__main__":
+    app.run()
+
     
 
 # @app.route('/display/<filename>')
