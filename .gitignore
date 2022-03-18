@@ -148,7 +148,8 @@ cython_debug/
 .DS_Store
 
 # Project Folders
-/static/uploads
+/static/uploads/
+/static/test_files/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

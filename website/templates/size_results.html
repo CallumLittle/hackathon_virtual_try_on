@@ -10,7 +10,7 @@
 
 <body>
   <div class="container">
-    <img src="static/resources/matchesfashion-logo.png" alt="MF Logo" width=500px height="auto" align="center">
+    <img src="static/resources/matchesfashion-logo.png" alt="MF Logo" width=500px height="auto" align="center" >
     <div>
       <img src="{{ product_image }}" alt="Product Image" width=330px height=auto align="left">
       <p style="float:right" ;>
@@ -35,18 +35,29 @@
         <p></p>
         <input type="submit" value="Find your perfect size!" />
       </form>
-    <p>
-      {% with messages = get_flashed_messages() %}
-      {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    </p>
-  </div>
+      <!-- <div>
+        <h2>Segmented Images</h2>
+        <img src="static/test_images/front.jpg" alt="Front" width=330px height=auto align="left">
+        <img src="static/test_images/side.jpg" alt="Side" width=330px height=auto align="left">
+      </div>
+      <div> -->
+      </div>
+      <h2>Segmented Images</h2>
+      <img src="static/test_images/front_segmented.jpg"alt="Front Segmented" width=330px height=auto align="left">
+      <img src="static/test_images/side_segmented.jpg" alt="Side Segmented" width=330px height=auto align="left">
+    </div>
+      <p align="'center">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      </p>
+    </div>
   </div>
 </body>
 

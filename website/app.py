@@ -80,18 +80,11 @@ def home():
 @app.route('/customer_size', methods=['POST'])
 def upload_image():
     check_paths()
-
-    # Save Image Locally
     save_customer_image('front')
     save_customer_image('side')
-    # flash('Images successfully saved')
-
-    # Save information
     save_customer_information()
-    # flash('Customer information successfully saved')
-
     calculate_size()
-    return render_template('customer_info.html', product_image=test_image)
+    return render_template('size_results.html', product_image=test_image)
 
 @app.route('/customer_info', methods=['POST'])
 def get_product_info():
@@ -100,7 +93,6 @@ def get_product_info():
 
 @app.route('/display/<filename>')
 def display_image(filename):
-    #print('display_image filename: ' + filename)
     return redirect(url_for('static', filename=test_image), code=301)
 
 if __name__ == "__main__":
