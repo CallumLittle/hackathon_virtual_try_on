@@ -148,6 +148,6 @@ cython_debug/
 .DS_Store
 
 # Project Folders
-/static/uploads/
-/static/test_images/
-/static/image_files/
+*uploads/
+*test_images/
+*image_files/
