@@ -151,3 +151,4 @@ cython_debug/
 *uploads/
 *test_images/
 *image_files/
+*saved_segmented_images/
